@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Subject - {{ control.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .form-container {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: calc(100% - 16px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="currentColor" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1.5em;
+        }
+
+        .form-group input[type="checkbox"] {
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .form-group label[for^="is_"] {
+            display: inline-block;
+            font-weight: normal;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header nav ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        header nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        header nav ul li a:hover {
+            color: #f8f9fa;
+        }
+
+        body.form-body {
+            background-color: #e9ecef;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            align-items: center;
+        }
+
+        main {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px 0;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body class="form-body">
+    <header>
+        <h1>Edit Subject for {{ control.name }} Control</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('list_subjects', control_id=control.id) }}">Back to Subjects</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="form-container">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="code">Code:</label>
+                    <input type="text" id="code" name="code" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="type">Type:</label>
+                    <select id="type" name="type" required>
+                        {% for type in subject_types %}
+                        <option value="{{ type.value }}">{{ type.value.capitalize() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exam_date">Exam Date:</label>
+                    <input type="date" id="exam_date" name="exam_date">
+                </div>
+                <div class="form-group">
+                    <label for="exam_day">Exam Day:</label>
+                    <select id="exam_day" name="exam_day">
+                        <option value="">Select Day</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exam_time">Exam Time:</label>
+                    <input type="text" id="exam_time" name="exam_time">
+                </div>
+                <div class="form-group">
+                    <label for="students_total">Total Students:</label>
+                    <input type="number" id="students_total" name="students_total">
+                </div>
+                <div class="form-group">
+                    <label for="present">Present:</label>
+                    <input type="number" id="present" name="present">
+                </div>
+                <div class="form-group">
+                    <label for="absent">Absent:</label>
+                    <input type="number" id="absent" name="absent">
+                </div>
+                <div class="form-group">
+                    <label for="deprived">Deprived:</label>
+                    <input type="number" id="deprived" name="deprived">
+                </div>
+                <div class="form-group">
+                    <label for="withdrawn">Withdrawn:</label>
+                    <input type="number" id="withdrawn" name="withdrawn">
+                </div>
+                <div class="form-group">
+                    <label for="report_actual">Actual Report:</label>
+                    <input type="text" id="report_actual" name="report_actual">
+                </div>
+                <div class="form-group">
+                    <label for="report_digital">Digital Report:</label>
+                    <input type="text" id="report_digital" name="report_digital">
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="is_recorded" name="is_recorded">
+                    <label for="is_recorded">Is Recorded</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="is_reviewed" name="is_reviewed">
+                    <label for="is_reviewed">Is Reviewed</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="is_final_reviewed" name="is_final_reviewed">
+                    <label for="is_final_reviewed">Is Final Reviewed</label>
+                </div>
+                <button type="submit" class="btn">Add Subject</button>
+            </form>
+        </div>
+
+    </main>
+    <footer>
+        <p>&copy; 2025 - All Rights Reserved to HORUS University in EGYPT - Developed by ESSIC</p>
+    </footer>
+</body>
+</html>

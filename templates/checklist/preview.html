@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Checklist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="preview-body">
+    <header>
+        <h1>Preview Checklist</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('upload_checklist') }}">Back to Upload</a></li>
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% if message %}
+        <p>{{ message }}</p>
+        {% else %}
+        <p>Checklist preview will appear here after successful upload.</p>
+        {% endif %}
+    </main>
+    <footer>
+        <p>&copy; 2025 - All Rights Reserved to HORUS University in EGYPT - Developed by ESSIC</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects - {{ control.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #292558;
+            color: white;
+            padding: 1em 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em; /* Adjust font size for better fit */
+        }
+
+        header nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        header nav ul li {
+            margin-left: 15px;
+        }
+
+        header nav ul li:first-child {
+            margin-left: 0;
+        }
+
+        header nav ul li a {
+            color: #292558;
+            text-decoration: none;
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        header nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 95%; /* Adjust max-width for better screen fit */
+        }
+
+        .subjects-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden; /* For rounded corners on table */
+            background-color: #fff;
+        }
+
+        .subjects-table th, .subjects-table td {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            text-align: left;
+            white-space: nowrap; /* Prevent text wrapping in cells */
+        }
+
+        .subjects-table th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .subjects-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .subjects-table th:nth-child(1), /* Type */
+        .subjects-table td:nth-child(1),
+        .subjects-table th:nth-child(8), /* Prepared? */
+        .subjects-table td:nth-child(8),
+        .subjects-table th:nth-child(9), /* Year Grade? */
+        .subjects-table td:nth-child(9),
+        .subjects-table th:nth-child(10), /* Answer Model? */
+        .subjects-table td:nth-child(10),
+        .subjects-table th:nth-child(18), /* Grading */
+        .subjects-table td:nth-child(18),
+        .subjects-table th:nth-child(19), /* Review */
+        .subjects-table td:nth-child(19),
+        .subjects-table th:nth-child(20), /* Recording Grades */
+        .subjects-table td:nth-child(20),
+        .subjects-table th:nth-child(21), /* Grade Entry Review */
+        .subjects-table td:nth-child(21) {
+            text-align: center; /* Center the content for these columns */
+        }
+
+        /* Style for color indicators */
+        .status-color {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .status-yes {
+            background-color: #28a745; /* Green for Yes */
+        }
+
+        .status-no {
+            background-color: #dc3545; /* Red for No */
+        }
+
+        .editable {
+            background-color: #fff;
+        }
+
+        .view-only {
+            background-color: #f9f9f9;
+        }
+
+        .actions {
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .actions a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .actions a.btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .actions a.btn:hover {
+            background-color: #0056b3;
+        }
+
+        .actions a.delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .actions a.delete:hover {
+            background-color: #c82333;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Responsive adjustments (optional) */
+        @media (max-width: 768px) {
+            .subjects-table {
+                font-size: 0.8em;
+            }
+
+            .subjects-table th, .subjects-table td {
+                padding: 8px 5px;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            header nav ul li a {
+                padding: 0.3em 0.6em;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body class="list-body">
+    <header>
+        <h1>Subjects for {{ control.name }}</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('list_control', semester_id=control.semester_id) }}">Back to Controls</a></li>
+                <li><a href="{{ url_for('add_subject', control_id=control.id) }}">Add New Subject</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% if subjects %}
+        <form method="POST" action="{{ url_for('update_subject', control_id=control.id) }}">
+            <table class="subjects-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Day</th>
+                        <th>Date</th>
+                        <th>Code</th>
+                        <th>Subject Name</th>
+                        <th>Total</th>
+                        <th>Time</th>
+                        <th>Prepared?</th>
+                        <th>Year Grade?</th>
+                        <th>Answer Model?</th>
+                        <th>Incomplete</th>
+                        <th>Withdraw</th>
+                        <th>Absence</th>
+                        <th>Attendees</th>
+                        <th>Expulsion</th>
+                        <th>Cheating Report</th>
+                        <th>Misconduct Report</th>
+                        <th>Grading</th>
+                        <th>Review</th>
+                        <th>Recording Grades</th>
+                        <th>Grade Entry Review</th>
+                        <th>Notes</th>
+                        {% if current_user.role == Role.ADMIN %}
+                        <th class="actions">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in subjects %}
+                    <tr>
+                        <td>{{ subject.type.value }}</td>
+                        <td>{{ subject.exam_day }}</td>
+                        <td>{{ subject.exam_date }}</td>
+                        <td>{{ subject.code }}</td>
+                        <td>{{ subject.name }}</td>
+                        <td>{{ subject.students_total }}</td>
+                        <td>{{ subject.exam_time }}</td>
+
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="checkbox" name="prepared_{{ subject.id }}" {% if subject.prepared %}checked{% endif %}>
+                            {% else %}
+                            <span class="status-color {% if subject.prepared %}status-yes{% else %}status-no{% endif %}"></span>
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="checkbox" name="year_grade_{{ subject.id }}" {% if subject.year_grade %}checked{% endif %}>
+                            {% else %}
+                            <span class="status-color {% if subject.year_grade %}status-yes{% else %}status-no{% endif %}"></span>
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="checkbox" name="answer_model_{{ subject.id }}" {% if subject.answer_model %}checked{% endif %}>
+                            {% else %}
+                            <span class="status-color {% if subject.answer_model %}status-yes{% else %}status-no{% endif %}"></span>
+                            {% endif %}
+                        </td>
+
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="number" name="incomplete_{{ subject.id }}" value="{{ subject.incomplete }}" class="attendance-field">
+                            {% else %}
+                            {{ subject.incomplete }}
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="number" name="withdrawn_{{ subject.id }}" value="{{ subject.withdrawn }}" class="attendance-field">
+                            {% else %}
+                            {{ subject.withdrawn }}
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="number" name="absent_{{ subject.id }}" value="{{ subject.absent }}" class="attendance-field">
+                            {% else %}
+                            {{ subject.absent }}
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="number" name="attendees_{{ subject.id }}" value="{{ subject.present }}" class="attendance-field">
+                            {% else %}
+                            {{ subject.present }}
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="number" name="expulsion_{{ subject.id }}" value="{{ subject.expulsion }}" class="attendance-field">
+                            {% else %}
+                            {{ subject.expulsion }}
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="number" name="cheating_report_{{ subject.id }}" value="{{ subject.cheating_report }}">
+                            {% else %}
+                            {{ subject.cheating_report }}
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="number" name="misconduct_report_{{ subject.id }}" value="{{ subject.misconduct_report }}">
+                            {% else %}
+                            {{ subject.misconduct_report }}
+                            {% endif %}
+                        </td>
+
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="checkbox" name="grading_{{ subject.id }}" {% if subject.grading %}checked{% endif %}>
+                            {% else %}
+                            <span class="status-color {% if subject.grading %}status-yes{% else %}status-no{% endif %}"></span>
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="checkbox" name="review_{{ subject.id }}" {% if subject.review %}checked{% endif %}>
+                            {% else %}
+                            <span class="status-color {% if subject.review %}status-yes{% else %}status-no{% endif %}"></span>
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="checkbox" name="recording_grades_{{ subject.id }}" {% if subject.recording_grades %}checked{% endif %}>
+                            {% else %}
+                            <span class="status-color {% if subject.recording_grades %}status-yes{% else %}status-no{% endif %}"></span>
+                            {% endif %}
+                        </td>
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <input type="checkbox" name="grade_entry_review_{{ subject.id }}" {% if subject.grade_entry_review %}checked{% endif %}>
+                            {% else %}
+                            <span class="status-color {% if subject.grade_entry_review %}status-yes{% else %}status-no{% endif %}"></span>
+                            {% endif %}
+                        </td>
+
+                        <td class="{% if current_user.role == Role.ADMIN %}editable{% else %}view-only{% endif %}">
+                            {% if current_user.role == Role.ADMIN %}
+                            <textarea name="notes_{{ subject.id }}">{{ subject.notes }}</textarea>
+                            {% else %}
+                            {{ subject.notes }}
+                            {% endif %}
+                        </td>
+
+                        {% if current_user.role == Role.ADMIN %}
+                        <td class="actions">
+                            <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn">Edit</a>
+                            <a href="{{ url_for('delete_subject', subject_id=subject.id) }}" class="delete">Delete</a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p id="total-error" class="error-message"></p>
+            {% if current_user.role == Role.ADMIN %}
+            <button type="submit" class="btn">Update Subjects</button>
+            {% endif %}
+        </form>
+        {% else %}
+        <p>No subjects added for this control yet.</p>
+        {% endif %}
+    </main>
+    <footer>
+        <p>&copy; 2025 - All Rights Reserved to HORUS University in EGYPT - Developed by ESSIC</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cells = document.querySelectorAll('.subjects-table td');
+            cells.forEach(cell => {
+                if (cell.children.length === 0 && !cell.classList.contains('actions')) {
+                    cell.classList.add('view-only');
+                } else if (cell.children.length > 0 && !cell.querySelector('input[type="checkbox"], input[type="number"], textarea')) {
+                    cell.classList.add('view-only'); // Treat 'Yes/No' as view-only
+                } else if (cell.querySelector('input[type="checkbox"], input[type="number"], textarea')) {
+                    cell.classList.add('editable');
+                }
+            });
+
+            const totalError = document.getElementById('total-error');
+            const attendanceFields = document.querySelectorAll('.attendance-field');
+            const totalFields = document.querySelectorAll('td:nth-child(6)');
+
+            attendanceFields.forEach(field => {
+                field.addEventListener('change', validateTotal);
+            });
+
+            function validateTotal() {
+              let isValid = true;
+              totalFields.forEach((totalCell, index) => {
+                const row = totalCell.parentNode;
+                const total = parseInt(totalCell.textContent, 10) || parseInt(totalCell.innerText, 10);
+                const presentInput = row.querySelector(`input[name="attendees_${subjects[index].id}"]`);
+                const absentInput = row.querySelector(`input[name="absent_${subjects[index].id}"]`);
+                const withdrawnInput = row.querySelector(`input[name="withdrawn_${subjects[index].id}"]`);
+                const expulsionInput = row.querySelector(`input[name="expulsion_${subjects[index].id}"]`);
+                const incompleteInput = row.querySelector(`input[name="incomplete_${subjects[index].id}"]`);
+
+                const present = presentInput ? parseInt(presentInput.value, 10) || 0 : parseInt(row.cells[13].textContent, 10) || parseInt(row.cells[13].innerText, 10) || 0;
+                const absent = absentInput ? parseInt(absentInput.value, 10) || 0 : parseInt(row.cells[12].textContent, 10) || parseInt(row.cells[12].innerText, 10) || 0;
+                const withdrawn = withdrawnInput ? parseInt(withdrawnInput.value, 10) || 0 : parseInt(row.cells[11].textContent, 10) || parseInt(row.cells[11].innerText, 10) || 0;
+                const expulsion = expulsionInput ? parseInt(expulsionInput.value, 10) || 0 : parseInt(row.cells[14].textContent, 10) || parseInt(row.cells[14].innerText, 10) || 0;
+                const incomplete = incompleteInput ? parseInt(incompleteInput.value, 10) || 0 : parseInt(row.cells[10].textContent, 10) || parseInt(row.cells[10].innerText, 10) || 0;
+                const deprived = 0; // Assuming no deprived field for non-admins
+
+                if (total !== (present + absent + deprived + withdrawn + expulsion + incomplete)) {
+                  isValid = false;
+                }
+              });
+
+              if (!isValid) {
+                totalError.textContent = "Error: Attendance numbers do not add up to the total.";
+              } else {
+                totalError.textContent = "";
+              }
+            }
+
+            validateTotal(); // Initial validation
+        });
+    </script>
+</body>
+</html>

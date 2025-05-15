@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Checklist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="form-body">
+    <header>
+        <h1>Upload Checklist</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="checklist_file">Select Checklist File:</label>
+                <input type="file" id="checklist_file" name="checklist_file" required>
+                <p class="form-hint">Supported formats: (Will be implemented later)</p>
+            </div>
+            <button type="submit" class="btn">Upload</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2025 - All Rights Reserved to HORUS University in EGYPT - Developed by ESSIC</p>
+    </footer>
+</body>
+</html>

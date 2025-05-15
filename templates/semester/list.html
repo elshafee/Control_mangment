@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Semesters{% endblock %}
+
+{% block content %}
+  <h1>Semesters</h1>
+  <p><a href="{{ url_for('add_semester') }}" class="btn btn-primary">Add New Semester</a></p>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flashes">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for semester in semesters %}
+        <tr>
+          <td>{{ semester.id }}</td>
+          <td>{{ semester.name }}</td>
+          <td>{{ semester.start_date }}</td>
+          <td>{{ semester.end_date }}</td>
+          <td>
+            <a href="{{ url_for('edit_semester', semester_id=semester.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            <a href="{{ url_for('delete_semester', semester_id=semester.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete {{ semester.name }}?')">Delete</a>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">No semesters found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

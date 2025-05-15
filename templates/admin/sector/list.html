@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Sectors</h1>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <p><a href="{{ url_for('add_sector_admin') }}" class="btn btn-primary">Add New Sector</a></p>
+  <ul>
+    {% for sector in sectors %}
+      <li>
+        {{ sector.name }}
+        <a href="{{ url_for('edit_sector_admin', sector_id=sector.id) }}" class="btn btn-sm btn-warning">Edit</a>
+        <a href="{{ url_for('delete_sector_admin', sector_id=sector.id) }}" class="btn btn-sm btn-danger">Delete</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

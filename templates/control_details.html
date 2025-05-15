@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ control.name }} Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="details-body">
+    <header>
+        <h1>{{ control.name }}</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="details-container">
+            <h3>Control Code: {{ control.code }}</h3>
+            {% if control.details %}
+            <ul>
+                {% for key, value in control.details.items() %}
+                <li><strong>{{ key.capitalize() }}:</strong> {{ value }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No details available for this control.</p>
+            {% endif %}
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 - All Rights Reserved to HORUS University in EGYPT - Developed by ESSIC</p>
+    </footer>
+</body>
+</html>

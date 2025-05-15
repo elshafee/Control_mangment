@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controls - {{ semester.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="list-body">
+    <header>
+        <h1>Controls for {{ semester.name }}</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}">Back to Semesters</a></li>
+                 {% if current_user.role == Role.ADMIN %}
+            <div class="admin-actions">
+                <li><a href="{{ url_for('add_control', semester_id=semester.id) }}">Add New Control</a></li>
+            </div>
+            {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% if controls %}
+        <div class="cards-container">
+            {% for control in controls %}
+            <div class="card">
+                <h3><a href="{{ url_for('list_subjects', control_id=control.id) }}">{{ control.name }}</a></h3>
+                <p>Notes: {{ control.notes }}</p>
+                <p>
+                    <a href="{{ url_for('edit_control', control_id=control.id) }}" class="btn">Edit</a>
+                    <a href="{{ url_for('delete_control', control_id=control.id) }}" class="btn">Delete</a>
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No controls added for this semester yet.</p>
+        {% endif %}
+    </main>
+    <footer>
+        <p>&copy; 2025 - All Rights Reserved to HORUS University in EGYPT - Developed by ESSIC</p>
+    </footer>
+</body>
+</html>

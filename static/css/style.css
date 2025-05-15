@@ -1,0 +1,130 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #292558;
+}
+
+/* Header Styles (as before) */
+header {
+    background-color: #292558;
+    color: white;
+    padding: 1em;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header a {
+    color: #B68B1E;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+header a:hover {
+    color: #ffc107;
+}
+
+/* Main Content Styles */
+main {
+    padding: 20px;
+}
+
+h2 {
+    color: #292558;
+    margin-bottom: 15px;
+}
+
+/* Generic Card Styles */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; /* Or other alignment */
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px; /* Adjust as needed */
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    color: #292558;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.card a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Form Styles (as before) */
+.form-body { /* ... your form styles ... */ }
+.form-group { /* ... your form group styles ... */ }
+.form-group label { /* ... your label styles ... */ }
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="number"] { /* ... your input styles ... */ }
+.btn { /* ... your button styles ... */ }
+
+/* List Styles (overriding default ul/li) */
+ul, ol {
+    list-style: none; /* Remove default bullets/numbers */
+    padding-left: 0;
+}
+
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #FFFFFF;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+        li a:hover {
+            background-color: rgba(255, 265, 255, 0.1); /* Slightly lighter background on hover */
+        }
+
+        li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        li span {
+            color: #6c757d;
+        }
+footer {
+    text-align: center;
+    padding: 1em;
+    background-color: #292558;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

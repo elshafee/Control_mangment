@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="form-body">
+    <header>
+        <h1>Edit Control</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('list_control', semester_id=control.semester_id) }}">Back to Controls</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <form method="POST">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{ control.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <textarea id="notes" name="notes">{{ control.notes }}</textarea>
+            </div>
+            <button type="submit" class="btn">Save Changes</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2025 - All Rights Reserved to HORUS University in EGYPT - Developed by ESSIC</p>
+    </footer>
+</body>
+</html>

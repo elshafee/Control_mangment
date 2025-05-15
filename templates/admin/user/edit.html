@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Edit User: {{ user.username }}</h1>
+  <form method="POST">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" value="{{ user.username }}" required>
+    </div>
+    <div class="form-group">
+      <label for="password">New Password (leave blank to keep current):</label>
+      <input type="password" id="password" name="password">
+    </div>
+    <div class="form-group">
+      <label for="role">Role:</label>
+      <select id="role" name="role" required>
+        {% for role in Role %}
+          <option value="{{ role.value }}" {% if user.role == role %}selected{% endif %}>{{ role.value.capitalize() }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="sector_id">Sector:</label>
+      <select id="sector_id" name="sector_id">
+        <option value="">-- Select Sector --</option>
+        {% for sector in sectors %}
+          <option value="{{ sector.id }}" {% if user.sector_id == sector.id %}selected{% endif %}>{{ sector.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Allowed Controls:</label><br>
+      {% for control in controls %}
+        <input type="checkbox" name="controls" value="{{ control.id }}" {% if control in user.controls %}checked{% endif %}> {{ control.name }}<br>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Update User</button>
+    <a href="{{ url_for('list_users_admin') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}
